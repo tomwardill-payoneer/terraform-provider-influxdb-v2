@@ -9,7 +9,11 @@ builds:
       # goreleaser does not work with CGO, it could also complicate
       # usage by users in CI/CD systems like Terraform Cloud where
       # they are unable to install libraries.
-      - CGO_ENABLED=0
+      # - CGO_ENABLED=0
+      # ######################### WARNING #########################
+      # This really should not be a comment, however, disabling CGO
+      # on the latest linux version causes io errors - "go" complain
+      # at go for not using glibc when disabling CGO.
     mod_timestamp: '{{ .CommitTimestamp }}'
     flags:
       - -trimpath
