@@ -15,7 +15,7 @@ terraform {
   required_providers {
     influxdb-v2 = {
       source = "janrupf/influxdb-v2"
-      version = "0.4.5"
+      version = "0.4.6"
     }
   }
 }
