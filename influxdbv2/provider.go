@@ -3,6 +3,7 @@ package influxdbv2
 import (
 	"context"
 	"fmt"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	influxdb2 "github.com/influxdata/influxdb-client-go/v2"
@@ -35,17 +36,19 @@ func Provider() *schema.Provider {
 				DefaultFunc: schema.EnvDefaultFunc("INFLUXDB_V2_TOKEN", ""),
 			},
 		},
-		ConfigureFunc: providerConfigure,
+		ConfigureContextFunc: providerConfigure,
 	}
 }
 
-func providerConfigure(d *schema.ResourceData) (interface{}, error) {
+func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	influx := influxdb2.NewClient(d.Get("url").(string), d.Get("token").(string))
 
-	_, err := influx.Ready(context.Background())
+	var diags diag.Diagnostics
+
+	_, err := influx.Ping(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("error pinging server: %s", err)
+		return nil, diag.FromErr(fmt.Errorf("error pining server: %s", err))
 	}
 
-	return influx, nil
+	return influx, diags
 }

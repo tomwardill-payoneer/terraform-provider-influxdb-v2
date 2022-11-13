@@ -3,6 +3,7 @@ package influxdbv2
 import (
 	"context"
 	"fmt"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -11,7 +12,7 @@ import (
 
 func DataReady() *schema.Resource {
 	return &schema.Resource{
-		Read: DataGetReady,
+		ReadContext: DataGetReady,
 		Schema: map[string]*schema.Schema{
 			"output": {
 				Type:     schema.TypeMap,
@@ -21,13 +22,15 @@ func DataReady() *schema.Resource {
 	}
 }
 
-func DataGetReady(d *schema.ResourceData, meta interface{}) error {
+func DataGetReady(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	influx := meta.(influxdb2.Client)
-	ready, err := influx.Ready(context.Background())
+	ready, err := influx.Ready(ctx)
 	if err != nil {
-		return fmt.Errorf("server is not ready: %v", err)
+		return diag.FromErr(fmt.Errorf("server is not ready: %v", err))
 	}
-	if ready {
+	if ready != nil {
 		log.Printf("Server is ready !")
 	}
 
@@ -40,8 +43,8 @@ func DataGetReady(d *schema.ResourceData, meta interface{}) error {
 	d.SetId(id)
 	err = d.Set("output", output)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
-	return nil
+	return diags
 }
