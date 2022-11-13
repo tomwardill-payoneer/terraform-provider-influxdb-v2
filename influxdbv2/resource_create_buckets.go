@@ -181,7 +181,7 @@ func getRetentionRules(input interface{}) domain.RetentionRules {
 	for _, retentionRule := range retentionRulesSet {
 		rr, ok := retentionRule.(map[string]interface{})
 		if ok {
-			each := domain.RetentionRule{EverySeconds: rr["every_seconds"].(int64)}
+			each := domain.RetentionRule{EverySeconds: int64(rr["every_seconds"].(int))}
 			result = append(result, each)
 		}
 	}
