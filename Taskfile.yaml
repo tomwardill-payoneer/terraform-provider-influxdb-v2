@@ -7,7 +7,7 @@ vars:
   NAME: influxdb-v2
   GOLANGCI_LINT_VERSION: v1.49.0
   VERSION: v0.4.4
-  NAMESPACE: hasanhakkaev
+  NAMESPACE: janrupf
 
 dotenv: ['.env']
 

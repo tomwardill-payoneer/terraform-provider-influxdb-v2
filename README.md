@@ -14,8 +14,8 @@ Add this snippet to your code:
 terraform {
   required_providers {
     influxdb-v2 = {
-      source = "hasanhakkaev/influxdb-v2"
-      version = "0.4.4"
+      source = "janrupf/influxdb-v2"
+      version = "0.4.5"
     }
   }
 }
