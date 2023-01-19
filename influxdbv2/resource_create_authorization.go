@@ -104,7 +104,7 @@ func resourceAuthorizationCreate(d *schema.ResourceData, meta interface{}) error
 	d.SetId(*result.Id)
 	// token is only ever received once, so we must set it from this response
 	// and can not read it later
-	err = d.Set("token", result.Token)
+	err = d.Set("token", *result.Token)
 	if err != nil {
 		return err
 	}
