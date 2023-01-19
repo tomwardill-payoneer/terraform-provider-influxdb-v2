@@ -1,4 +1,4 @@
-module github.com/janrupf/terraform-provider-influxdb-v2
+module github.com/optile/terraform-provider-influxdb-v2
 
 go 1.19
 
