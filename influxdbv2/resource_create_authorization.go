@@ -3,7 +3,6 @@ package influxdbv2
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	influxdb2 "github.com/influxdata/influxdb-client-go/v2"
@@ -144,7 +143,7 @@ func resourceAuthorizationRead(d *schema.ResourceData, meta interface{}) error {
 	if err != nil {
 		return err
 	}
-	if strings.Compare(*authorizations.Token, "redacted") != 0 {
+	if *authorizations.Token != "redacted" {
 		err = d.Set("token", authorizations.Token)
 		if err != nil {
 			return err
