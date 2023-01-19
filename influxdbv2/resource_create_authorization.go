@@ -3,6 +3,7 @@ package influxdbv2
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	influxdb2 "github.com/influxdata/influxdb-client-go/v2"
@@ -101,6 +102,12 @@ func resourceAuthorizationCreate(d *schema.ResourceData, meta interface{}) error
 		return fmt.Errorf("error creating authorization: %e", err)
 	}
 	d.SetId(*result.Id)
+	// token is only ever received once, so we must set it from this response
+	// and can not read it later
+	err = d.Set("token", authorizations.Token)
+	if err != nil {
+		return err
+	}
 	return resourceAuthorizationRead(d, meta)
 }
 
@@ -137,9 +144,11 @@ func resourceAuthorizationRead(d *schema.ResourceData, meta interface{}) error {
 	if err != nil {
 		return err
 	}
-	err = d.Set("token", authorizations.Token)
-	if err != nil {
-		return err
+	if strings.Compare(*authorizations.Token, "redacted") != 0 {
+		err = d.Set("token", authorizations.Token)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
