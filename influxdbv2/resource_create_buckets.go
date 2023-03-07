@@ -185,5 +185,11 @@ func getRetentionRules(input interface{}) domain.RetentionRules {
 			result = append(result, each)
 		}
 	}
+	if len(retentionRulesSet) == 0 {
+		// If no retention rules, there's a default of 0 expiry
+		// but this isn't returned on the API
+		rule := domain.RetentionRule{EverySeconds: 0}
+		result = append(result, rule)
+	}
 	return result
 }
