@@ -144,7 +144,7 @@ func resourceAuthorizationRead(d *schema.ResourceData, meta interface{}) error {
 	if err != nil {
 		return err
 	}
-	if *authorizations.Token != "redacted" {
+	if authorizations.Token != nil && *authorizations.Token != "redacted" {
 		err = d.Set("token", authorizations.Token)
 		if err != nil {
 			return err
